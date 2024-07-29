@@ -1,6 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
+ /* 1. Importe el módulo crypto */
+ let crypto = require('crypto');
+
+ /* 1. Cargue los modelos de acuerdo con la configuración de la conexión */
+ const sequelize = require('../models/index.js').sequelize;
+ var initModels = require("../models/init-models");
+ var models = initModels( sequelize ); 
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -14,12 +22,13 @@ router.post('/login', async function (req, res, next) {
 
   /* 5. Verifique que username sea diferente de null, y que password sea diferente de null. */
   if (username != null && password != null) {
-
+    
     try {
       /* 6. 
         Del modelo users, use el método findOne para encontrar un registro
         cuyo campo name sea igual que username
       */
+
       let userData = await models.users.findOne({
         where: {
           name: username
@@ -27,6 +36,7 @@ router.post('/login', async function (req, res, next) {
       })
 
 
+     
       /* 7. Verifique que userData sea diferente de null, y que userData.password sea diferente de null. */
       if (userData != null && userData.password != null) {
 
